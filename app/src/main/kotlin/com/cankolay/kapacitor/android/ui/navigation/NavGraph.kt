@@ -1,13 +1,15 @@
 package com.cankolay.kapacitor.android.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.navigation
-import com.cankolay.kapacitor.android.ui.composables.animatedComposableBuilder
+import com.cankolay.kapacitor.android.ui.composables.animatedComposable
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.views.HomeView
+import com.cankolay.kapacitor.android.ui.views.auth.SignInView
+import com.cankolay.kapacitor.android.ui.views.auth.SignUpView
 import com.cankolay.kapacitor.android.ui.views.settings.GeneralSettingsView
 import com.cankolay.kapacitor.android.ui.views.settings.LanguagesView
 import com.cankolay.kapacitor.android.ui.views.settings.SettingsView
@@ -23,128 +25,92 @@ import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 
 @Composable
 fun AppNavGraph(appViewModel: AppViewModel = hiltViewModel<AppViewModel>()) {
-    val appState by appViewModel.getAppDataStore()
+    val appState by appViewModel.appDataStoreFlow.collectAsState()
 
     val navController = LocalNavController.current
     NavHost(
         navController = navController,
-        startDestination = if (appState.isSetupDone) Route.Home.destination else Route.Welcome.destination,
+        startDestination = if (appState.isSetupDone) homeView else welcomeView,
     ) {
-        val animatedComposable =
-            animatedComposableBuilder()
-
-        navigation(
-            startDestination = Route.Welcome.destination,
-            route = "_${Route.Welcome.destination}",
+        animatedComposable<Route.Welcome>(
+            route = welcomeView
         ) {
-            animatedComposable(
-                Route.Welcome.destination,
-                null,
-                null,
-            ) {
-                WelcomeView()
-            }
-
-            animatedComposable(
-                Route.ServerDetails.destination,
-                null,
-                null,
-            ) {
-                ServerDetailsView()
-            }
-
-            animatedComposable(
-                Route.ServerPassword.destination,
-                null,
-                null,
-            ) {
-                ServerPasswordView(
-                )
-            }
+            WelcomeView()
         }
 
-        animatedComposable(
-            Route.Home.destination,
-            null,
-            null,
+        animatedComposable<Route.ServerDetails>(
+            route = serverDetailsView
+        ) {
+            ServerDetailsView()
+        }
+
+        animatedComposable<Route.ServerPassword>(
+            route = serverPasswordView
+        ) {
+            ServerPasswordView()
+        }
+
+        animatedComposable<Route.SignIn>(
+            route = signInView
+        ) {
+            SignInView()
+        }
+
+        animatedComposable<Route.SignUp>(
+            route = signUpView
+        ) {
+            SignUpView()
+        }
+
+        animatedComposable<Route.Home>(
+            route = homeView
         ) {
             HomeView()
         }
 
-        navigation(
-            startDestination = Route.Settings.destination,
-            route = "_${Route.Settings.destination}",
+        animatedComposable<Route.Settings>(
+            route = settingsView
         ) {
-            animatedComposable(
-                Route.Settings.destination,
-                null,
-                null,
-            ) {
-                SettingsView()
-            }
+            SettingsView()
+        }
 
-            animatedComposable(
-                Route.GeneralSettings.destination,
-                null,
-                null,
-            ) {
-                GeneralSettingsView()
-            }
+        animatedComposable<Route.GeneralSettings>(
+            route = generalSettingsView
+        ) {
+            GeneralSettingsView()
+        }
 
-            animatedComposable(
-                Route.Languages.destination,
-                null,
-                null,
-            ) {
-                LanguagesView()
-            }
+        animatedComposable<Route.Languages>(
+            route = languagesView
+        ) {
+            LanguagesView()
+        }
 
-            navigation(
-                startDestination = Route.Appearance.destination,
-                route = "_${Route.Appearance.destination}",
-            ) {
-                animatedComposable(
-                    Route.Appearance.destination,
-                    null,
-                    null,
-                ) {
-                    AppearanceView()
-                }
-                animatedComposable(
-                    Route.Theme.destination,
-                    null,
-                    null,
-                ) {
-                    ThemeView()
-                }
-                animatedComposable(
-                    Route.MaterialYou.destination,
-                    null,
-                    null,
-                ) {
-                    MaterialYouView()
-                }
-            }
+        animatedComposable<Route.Appearance>(
+            route = appearanceView
+        ) {
+            AppearanceView()
+        }
+        animatedComposable<Route.Theme>(
+            route = themeView
+        ) {
+            ThemeView()
+        }
+        animatedComposable<Route.MaterialYou>(
+            route = materialYouView
+        ) {
+            MaterialYouView()
+        }
 
-            navigation(
-                startDestination = Route.About.destination,
-                route = "_${Route.About.destination}",
-            ) {
-                animatedComposable(
-                    Route.About.destination,
-                    null,
-                    null,
-                ) {
-                    AboutView()
-                }
-                animatedComposable(
-                    Route.Licenses.destination,
-                    null,
-                    null,
-                ) {
-                    LicensesView()
-                }
-            }
+        animatedComposable<Route.About>(
+            route = aboutView
+        ) {
+            AboutView()
+        }
+        animatedComposable<Route.Licenses>(
+            route = licensesView
+        ) {
+            LicensesView()
         }
     }
 }

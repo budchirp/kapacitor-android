@@ -1,7 +1,6 @@
 package com.cankolay.kapacitor.android.ui.composables
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -23,6 +21,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -30,16 +30,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavHostController
-import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import com.cankolay.kapacitor.android.ui.composition.LocalDrawerState
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.navigation.Route
 import com.cankolay.kapacitor.android.ui.navigation.mainRoutes
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +50,8 @@ fun Layout(
     val drawerState = LocalDrawerState.current
 
     val coroutineScope = rememberCoroutineScope()
-    val isDrawerEnabled = appViewModel.isDrawerEnabled
+
+    val isDrawerEnabled by appViewModel.isDrawerEnabled.collectAsState()
 
     val scrollBehavior: TopAppBarScrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -69,7 +68,7 @@ fun Layout(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = route.title),
+                        text = stringResource(id = routeInfos[route]!!.title),
                         style = MaterialTheme.typography.titleLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -80,7 +79,7 @@ fun Layout(
                     var showMenu = true
                     run stop@{
                         mainRoutes.forEach { _route ->
-                            if (route.destination == _route.destination) {
+                            if (route.id == _route.id) {
                                 showBack = false
                                 showMenu = isDrawerEnabled
 
@@ -134,11 +133,11 @@ fun Layout(
     ) { innerPadding ->
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(
-                    paddingValues = innerPadding,
-                ),
+                Modifier
+                    .fillMaxSize()
+                    .padding(
+                        paddingValues = innerPadding,
+                    ),
         ) { content() }
     }
 }

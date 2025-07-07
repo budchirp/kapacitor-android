@@ -34,6 +34,7 @@ import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composables.ListItem
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.navigation.aboutRoutes
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 
 @Composable
 fun AboutView() {
@@ -60,13 +61,14 @@ fun AboutView() {
             }
 
             items(aboutRoutes) { route ->
+                val routeInfo = routeInfos[route]!!
                 ListItem(
-                    title = stringResource(id = route.title),
-                    description = stringResource(id = route.description),
-                    onClick = { navController.navigate(route = route.destination) },
+                    title = stringResource(id = routeInfo.title),
+                    description = stringResource(id = routeInfo.description),
+                    onClick = { navController.navigate(route = route) },
                     firstItem = {
                         Icon(
-                            icon = route.icon,
+                            icon = routeInfo.icon,
                         )
                     },
                 )

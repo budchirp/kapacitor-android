@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -36,8 +37,9 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composition.LocalDrawerState
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.Route
 import com.cankolay.kapacitor.android.ui.navigation.drawerRoutes
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
+import com.cankolay.kapacitor.android.ui.navigation.settingsView
 import com.cankolay.kapacitor.android.ui.utils.getSystemRoundedCorners
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 import kotlinx.coroutines.launch
@@ -47,7 +49,7 @@ fun Drawer(
     appViewModel: AppViewModel = hiltViewModel<AppViewModel>(),
     content: @Composable () -> Unit,
 ) {
-    val isDrawerEnabled = appViewModel.isDrawerEnabled
+    val isDrawerEnabled by appViewModel.isDrawerEnabled.collectAsState()
     if (isDrawerEnabled) {
         val drawerState = LocalDrawerState.current
 
@@ -159,30 +161,31 @@ fun DrawerContent() {
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination =
-            navBackStackEntry?.destination?.route ?: Route.Home.destination
+            navBackStackEntry?.destination?.route
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Column {
-                drawerRoutes.map { route: Route ->
+                drawerRoutes.map { route ->
+                    val routeInfo = routeInfos[route]!!
                     val selected =
-                        currentDestination.contains(route.destination, ignoreCase = true)
+                        currentDestination?.contains(route.id, ignoreCase = true) ?: false
 
                     NavigationDrawerItem(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         selected = selected,
                         onClick = {
-                            if (currentDestination != route.destination) {
+                            if (currentDestination != route.id) {
                                 navController.navigate(
-                                    route = route.destination,
+                                    route = route,
                                 )
                             }
                         },
-                        label = { Text(text = stringResource(id = route.title)) },
+                        label = { Text(text = stringResource(id = routeInfo.title)) },
                         icon = {
-                            Icon(icon = if (selected) route.icon else route.unselectedIcon)
+                            Icon(icon = if (selected) routeInfo.icon else routeInfo.outlinedIcon)
                         },
                     )
                 }
@@ -197,7 +200,7 @@ fun DrawerContent() {
                 },
                 selected = true,
                 icon = {
-                    Icon(icon = Route.Settings.icon)
+                    Icon(icon = routeInfos[settingsView]!!.icon)
                 },
                 onClick = {
                     if (windowSizeClass != WindowWidthSizeClass.EXPANDED) {

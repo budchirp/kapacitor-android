@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composables.ListItem
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 import com.cankolay.kapacitor.android.ui.navigation.settingRoutes
 
 @Composable
@@ -19,15 +20,16 @@ fun SettingsView() {
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(settingRoutes) { route ->
+                val routeInfo = routeInfos[route]!!
                 ListItem(
-                    title = stringResource(id = route.title),
-                    description = stringResource(id = route.description),
+                    title = stringResource(id = routeInfo.title),
+                    description = stringResource(id = routeInfo.description),
                     onClick = {
-                        navController.navigate(route = route.destination)
+                        navController.navigate(route = route)
                     },
                     firstItem = {
                         Icon(
-                            icon = route.icon,
+                            icon = routeInfo.icon,
                         )
                     },
                 )

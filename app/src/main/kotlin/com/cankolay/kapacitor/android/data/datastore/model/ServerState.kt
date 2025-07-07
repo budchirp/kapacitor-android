@@ -9,6 +9,6 @@ data class ServerState(
 fun defaultServerState(): ServerState =
     ServerState(
         serverUrl = "",
-        serverPort = 3000,
+        serverPort = 8080,
         serverPassword = "",
     )

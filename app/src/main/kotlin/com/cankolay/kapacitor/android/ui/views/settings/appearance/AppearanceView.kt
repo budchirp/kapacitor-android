@@ -11,6 +11,7 @@ import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composables.ListItem
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.navigation.appearanceRoutes
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 
 @Composable
 fun AppearanceView() {
@@ -19,18 +20,19 @@ fun AppearanceView() {
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(appearanceRoutes) { route ->
+                val routeInfo = routeInfos[route]!!
                 ListItem(
-                    title = stringResource(id = route.title),
+                    title = stringResource(id = routeInfo.title),
                     description =
                         stringResource(
-                            id = route.description
+                            id = routeInfo.description
                         ),
                     onClick = {
-                        navController.navigate(route = route.destination)
+                        navController.navigate(route = route)
                     },
                     firstItem = {
                         Icon(
-                            icon = route.icon,
+                            icon = routeInfo.icon,
                         )
                     },
                 )

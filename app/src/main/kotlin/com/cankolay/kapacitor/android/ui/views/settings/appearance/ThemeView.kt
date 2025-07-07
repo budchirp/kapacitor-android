@@ -8,6 +8,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +23,7 @@ import com.cankolay.kapacitor.android.viewmodel.SettingsViewModel
 fun ThemeView(settingsViewModel: SettingsViewModel = hiltViewModel()) {
     val context = LocalContext.current
 
-    val settingsState by settingsViewModel.getSettingsState()
+    val settingsState by settingsViewModel.settingsStateFlow.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {

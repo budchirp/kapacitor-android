@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.view.Window
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
@@ -31,7 +32,7 @@ fun AppTheme(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     content: @Composable () -> Unit,
 ) {
-    val settingsState by settingsViewModel.getSettingsState()
+    val settingsState by settingsViewModel.settingsStateFlow.collectAsState()
 
     val isDark = isDark(settingsState = settingsState)
 

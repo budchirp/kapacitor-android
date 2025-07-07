@@ -16,6 +16,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,12 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.Route
+import com.cankolay.kapacitor.android.ui.navigation.serverPasswordView
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsSubmitReturn.InvalidCredentials
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsSubmitReturn.Success
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ServerDetailsView(
@@ -41,13 +42,15 @@ fun ServerDetailsView(
     val context = LocalContext.current
     val navController = LocalNavController.current
 
-    val data = serverDetailsViewModel.data
-    val validationError = serverDetailsViewModel.validationError
+    val data by serverDetailsViewModel.data.collectAsState()
+    val errors by serverDetailsViewModel.errors.collectAsState()
+
+    val isLoading by serverDetailsViewModel.isLoading.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        if (serverDetailsViewModel.isLoading) {
+        if (isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
@@ -63,6 +66,8 @@ fun ServerDetailsView(
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 ) {
+                    val inputErrors = errors["url"]
+
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = data.url,
@@ -73,27 +78,29 @@ fun ServerDetailsView(
                             Icon(icon = Icons.Filled.Language)
                         },
                         singleLine = true,
-                        isError = validationError?.property == "url",
+                        isError = inputErrors?.isNotEmpty() ?: false,
                         onValueChange = { text: String ->
                             serverDetailsViewModel.updateData(newData = data.copy(url = text))
                         },
                     )
 
-                    if (validationError != null && validationError.property == "url") Text(
-                        text = stringResource(
-                            id = context.resources.getIdentifier(
-                                "input_${validationError.message}",
-                                "string",
-                                context.packageName
-                            ), stringResource(
+                    inputErrors?.forEach { error ->
+                        Text(
+                            text = stringResource(
                                 id = context.resources.getIdentifier(
-                                    "server_details_${validationError.property}",
+                                    "input_${error.message}",
                                     "string",
                                     context.packageName
+                                ), stringResource(
+                                    id = context.resources.getIdentifier(
+                                        "server_details_${error.property}",
+                                        "string",
+                                        context.packageName
+                                    )
                                 )
                             )
                         )
-                    )
+                    }
                 }
             }
 
@@ -103,6 +110,8 @@ fun ServerDetailsView(
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 ) {
+                    val inputErrors = errors["port"]
+
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = data.port,
@@ -114,27 +123,29 @@ fun ServerDetailsView(
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        isError = validationError?.property == "port",
+                        isError = inputErrors?.isNotEmpty() ?: false,
                         onValueChange = { text: String ->
                             serverDetailsViewModel.updateData(newData = data.copy(port = text))
                         },
                     )
 
-                    if (validationError != null && validationError.property == "port") Text(
-                        text = stringResource(
-                            id = context.resources.getIdentifier(
-                                "input_${validationError.message}",
-                                "string",
-                                context.packageName
-                            ), stringResource(
+                    inputErrors?.forEach { error ->
+                        Text(
+                            text = stringResource(
                                 id = context.resources.getIdentifier(
-                                    "server_details_${validationError.property}",
+                                    "input_${error.message}",
                                     "string",
                                     context.packageName
+                                ), stringResource(
+                                    id = context.resources.getIdentifier(
+                                        "server_details_${error.property}",
+                                        "string",
+                                        context.packageName
+                                    )
                                 )
                             )
                         )
-                    )
+                    }
                 }
 
             }
@@ -152,12 +163,11 @@ fun ServerDetailsView(
                 stringResource(id = R.string.server_invalid_credentials)
 
             Button(onClick = {
-                if (serverDetailsViewModel.validateData() == null) {
+                if (serverDetailsViewModel.validateData().isEmpty()) {
                     coroutineScope.launch {
-                        val result =
-                            runBlocking { serverDetailsViewModel.submit() }
+                        val result = serverDetailsViewModel.submit()
                         if (result == Success) {
-                            navController.navigate(route = Route.ServerPassword.destination)
+                            navController.navigate(route = serverPasswordView)
                         } else {
                             Toast.makeText(
                                 context,
@@ -167,7 +177,7 @@ fun ServerDetailsView(
                         }
                     }
                 }
-            }, enabled = validationError == null) {
+            }, enabled = errors.isEmpty() || !isLoading) {
                 Text(text = stringResource(id = R.string.next))
             }
         }

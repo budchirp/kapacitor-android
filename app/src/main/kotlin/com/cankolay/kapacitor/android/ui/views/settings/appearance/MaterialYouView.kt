@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,8 @@ import com.cankolay.kapacitor.android.data.datastore.model.SettingsState
 import com.cankolay.kapacitor.android.data.datastore.model.defaultSettingsState
 import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composables.ListItem
-import com.cankolay.kapacitor.android.ui.navigation.Route
+import com.cankolay.kapacitor.android.ui.navigation.materialYouView
+import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 import com.cankolay.kapacitor.android.ui.theme.toColor
 import com.cankolay.kapacitor.android.ui.utils.isDark
 import com.cankolay.kapacitor.android.viewmodel.SettingsViewModel
@@ -57,7 +59,7 @@ private val colorList =
 
 @Composable
 fun MaterialYouView(settingsViewModel: SettingsViewModel = hiltViewModel()) {
-    val settingsState by settingsViewModel.getSettingsState()
+    val settingsState by settingsViewModel.settingsStateFlow.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -173,7 +175,7 @@ private fun MaterialYouToggle(settingsViewModel: SettingsViewModel, settingsStat
             horizontalArrangement = Arrangement.spacedBy(space = 16.dp)
         ) {
             Text(
-                text = stringResource(id = Route.MaterialYou.title),
+                text = stringResource(id = routeInfos[materialYouView]!!.title),
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(weight = 1f),

@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.Route
+import com.cankolay.kapacitor.android.ui.navigation.serverDetailsView
 
 @Composable
 fun WelcomeView() {
@@ -29,7 +29,7 @@ fun WelcomeView() {
             verticalArrangement = Arrangement.Bottom,
         ) {
             Button(onClick = {
-                navController.navigate(route = Route.ServerDetails.destination)
+                navController.navigate(route = serverDetailsView)
             }) {
                 Text(text = stringResource(id = R.string.welcome_lets_get_started))
             }

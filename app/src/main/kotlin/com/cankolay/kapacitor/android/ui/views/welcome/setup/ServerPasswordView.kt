@@ -18,6 +18,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,13 +36,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composables.Icon
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.Route
+import com.cankolay.kapacitor.android.ui.navigation.homeView
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordSubmitReturn.InvalidCredentials
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordSubmitReturn.Success
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun ServerPasswordView(
@@ -51,13 +51,15 @@ fun ServerPasswordView(
     val context = LocalContext.current
     val navController = LocalNavController.current
 
-    val data = serverPasswordViewModel.data
-    val validationError = serverPasswordViewModel.validationError
+    val data by serverPasswordViewModel.data.collectAsState()
+    val errors by serverPasswordViewModel.errors.collectAsState()
+
+    val isLoading by serverPasswordViewModel.isLoading.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        if (serverPasswordViewModel.isLoading) {
+        if (isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
@@ -76,6 +78,8 @@ fun ServerPasswordView(
                         mutableStateOf(value = true)
                     }
 
+                    val inputErrors = errors["password"]
+
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = data.password,
@@ -92,27 +96,29 @@ fun ServerPasswordView(
                         },
                         visualTransformation = if (isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        isError = validationError?.property == "password",
+                        isError = inputErrors?.isNotEmpty() ?: false,
                         onValueChange = { text: String ->
                             serverPasswordViewModel.updateData(newData = data.copy(password = text))
                         },
                     )
 
-                    if (validationError != null && validationError.property == "password") Text(
-                        text = stringResource(
-                            id = context.resources.getIdentifier(
-                                "input_${validationError.message}",
-                                "string",
-                                context.packageName
-                            ), stringResource(
+                    inputErrors?.forEach { error ->
+                        Text(
+                            text = stringResource(
                                 id = context.resources.getIdentifier(
-                                    "server_${validationError.property}",
+                                    "input_${error.message}",
                                     "string",
                                     context.packageName
+                                ), stringResource(
+                                    id = context.resources.getIdentifier(
+                                        "server_details_${error.property}",
+                                        "string",
+                                        context.packageName
+                                    )
                                 )
                             )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -129,14 +135,13 @@ fun ServerPasswordView(
                 stringResource(id = R.string.server_invalid_credentials)
 
             Button(onClick = {
-                if (serverPasswordViewModel.validateData() == null) {
+                if (serverPasswordViewModel.validateData().isEmpty()) {
                     coroutineScope.launch {
-                        val result =
-                            runBlocking { serverPasswordViewModel.submit() }
+                        val result = serverPasswordViewModel.submit()
                         if (result == Success) {
                             appViewModel.setIsDrawerEnabled(enable = true)
 
-                            navController.navigate(route = Route.Home.destination)
+                            navController.navigate(route = homeView)
                         } else {
                             Toast.makeText(
                                 context,
@@ -146,7 +151,7 @@ fun ServerPasswordView(
                         }
                     }
                 }
-            }, enabled = validationError == null) {
+            }, enabled = errors.isEmpty() || !isLoading) {
                 Text(text = stringResource(id = R.string.next))
             }
         }
