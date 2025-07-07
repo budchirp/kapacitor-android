@@ -86,4 +86,10 @@
 
     <string name="licenses">Open Source Licenses</string>
     <string name="licenses_desc">Libraries used to make this app</string>
+
+    <string name="sign_in">Sign In</string>
+    <string name="sign_in_desc">Sign in to your account</string>
+
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_desc">Create a new account</string>
 </resources>
