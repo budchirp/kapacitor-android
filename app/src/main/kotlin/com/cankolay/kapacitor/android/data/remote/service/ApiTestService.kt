@@ -1,35 +1,39 @@
 package com.cankolay.kapacitor.android.data.remote.service
 
+import com.cankolay.kapacitor.android.data.remote.client.HttpRoutes
+import com.cankolay.kapacitor.android.data.remote.client.KtorClient
+import com.cankolay.kapacitor.android.data.remote.model.ApiResult
+import com.cankolay.kapacitor.android.data.remote.model.response.GetVersionEndpointResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.TestEndpointResponse
+import com.cankolay.kapacitor.android.data.remote.util.FetchUtil
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.RedirectResponseException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
-import com.cankolay.kapacitor.android.data.remote.client.HttpRoutes
-import com.cankolay.kapacitor.android.data.remote.client.KtorClient
-import com.cankolay.kapacitor.android.data.remote.error.APIErrorReason
-import com.cankolay.kapacitor.android.data.remote.model.ApiResult
-import com.cankolay.kapacitor.android.data.remote.model.response.GetVersionEndpointResponse
-import com.cankolay.kapacitor.android.data.remote.model.response.TestEndpointResponse
 import javax.inject.Inject
 
 class ApiTestService
 @Inject
 constructor(
-    ktorClient: KtorClient,
+    private val fetchUtil: FetchUtil,
+    private val ktorClient: KtorClient,
 ) {
     private var client: HttpClient
+
+    init {
+        runBlocking {
+            client = ktorClient.getClient()
+        }
+    }
 
     suspend fun test(
         serverUrl: String,
         serverPort: Int,
     ): ApiResult<TestEndpointResponse> {
-        try {
-            val body: TestEndpointResponse =
+        return fetchUtil.safeFetch {
+            val body =
                 client
                     .get {
                         url {
@@ -39,23 +43,15 @@ constructor(
                         }
                     }.body<TestEndpointResponse>()
 
-            return ApiResult.Success(data = body)
-        } catch (e: RedirectResponseException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.SERVER)
-        } catch (e: ClientRequestException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.USER)
-        } catch (e: ServerResponseException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.SERVER)
-        } catch (e: Exception) {
-            return ApiResult.Fatal(throwable = e)
+            return@safeFetch ApiResult.Success(data = body)
         }
     }
 
     suspend fun getVersion(
         serverPassword: String
     ): ApiResult<GetVersionEndpointResponse> {
-        try {
-            val body: GetVersionEndpointResponse =
+        return fetchUtil.safeFetch {
+            val body =
                 client
                     .get {
                         url {
@@ -65,21 +61,7 @@ constructor(
                         header("X-Server-Password", serverPassword)
                     }.body<GetVersionEndpointResponse>()
 
-            return ApiResult.Success(data = body)
-        } catch (e: RedirectResponseException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.SERVER)
-        } catch (e: ClientRequestException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.USER)
-        } catch (e: ServerResponseException) {
-            return ApiResult.Error(message = e.message, reason = APIErrorReason.SERVER)
-        } catch (e: Exception) {
-            return ApiResult.Fatal(throwable = e)
-        }
-    }
-
-    init {
-        runBlocking {
-            client = ktorClient.getClient()
+            return@safeFetch ApiResult.Success(data = body)
         }
     }
 }

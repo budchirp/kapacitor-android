@@ -6,6 +6,7 @@ import com.cankolay.kapacitor.android.data.datastore.AuthDataStore
 import com.cankolay.kapacitor.android.data.datastore.ServerDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -33,13 +34,17 @@ constructor(
         val authState =
             authDataStore.flow.first()
 
-        val client: HttpClient = HttpClient(OkHttp) {
+        val client = HttpClient(engineFactory = OkHttp) {
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTP
                     host = serverState.serverUrl
                     port = serverState.serverPort
                 }
+            }
+
+            install(plugin = HttpTimeout) {
+                requestTimeoutMillis = 10 * 1000
             }
 
             install(plugin = Auth) {
@@ -50,7 +55,7 @@ constructor(
                 }
             }
 
-            install(ContentNegotiation) {
+            install(plugin = ContentNegotiation) {
                 json(
                     json =
                         Json {
@@ -60,7 +65,7 @@ constructor(
             }
 
             if (BuildConfig.DEBUG) {
-                install(Logging) {
+                install(plugin = Logging) {
                     logger = Logger.DEFAULT
                     level = LogLevel.HEADERS
                     sanitizeHeader { header: String -> header == HttpHeaders.Authorization }

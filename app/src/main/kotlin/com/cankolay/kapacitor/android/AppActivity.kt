@@ -9,25 +9,35 @@ import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.rememberDrawerState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import dagger.hilt.android.AndroidEntryPoint
 import com.cankolay.kapacitor.android.ui.composables.AppLayout
 import com.cankolay.kapacitor.android.ui.composition.ProvideDrawerState
 import com.cankolay.kapacitor.android.ui.composition.ProvideNavController
 import com.cankolay.kapacitor.android.ui.navigation.AppNavGraph
 import com.cankolay.kapacitor.android.ui.theme.AppTheme
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
     private val appViewModel by viewModels<AppViewModel>()
 
+    private var isLoading = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycleScope.launchWhenStarted {
+            appViewModel.isLoading.collect {
+                isLoading = it
+            }
+        }
+
+
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                appViewModel.isLoading
+                isLoading
             }
         }
 
