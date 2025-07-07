@@ -1,12 +1,8 @@
 package com.cankolay.kapacitor.android.viewmodel.welcome.setup
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.cankolay.kapacitor.android.data.datastore.ServerDataStore
-import com.cankolay.kapacitor.android.data.remote.error.APIErrorReason
+import com.cankolay.kapacitor.android.data.remote.model.APIErrorReason
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult.Error
 import com.cankolay.kapacitor.android.data.remote.service.ApiTestService
@@ -17,8 +13,10 @@ import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsSubmi
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsSubmitReturn.InvalidCredentials
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerDetailsSubmitReturn.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 enum class ServerDetailsSubmitReturn {
@@ -33,20 +31,20 @@ class ServerDetailsViewModel @Inject constructor(
     private val apiTestService: ApiTestService
 ) :
     ViewModel() {
-    var isLoading by mutableStateOf(value = false)
+    var isLoading = MutableStateFlow(value = false)
         private set
 
-    var data by mutableStateOf(value = ServerDetailsModel())
+    var data = MutableStateFlow(value = ServerDetailsModel())
         private set
 
-    var validationError: ValidationError? by mutableStateOf(value = null)
+    var errors = MutableStateFlow<Map<String, Set<ValidationError>>>(value = emptyMap())
         private set
 
-    fun validateData(validationData: ServerDetailsModel = data): ValidationError? {
-        validationError =
+    fun validateData(validationData: ServerDetailsModel = data.value): Map<String, Set<ValidationError>> {
+        errors.value =
             ValidateData(model = ServerDetailsModel::class).validate(validationData)
 
-        return validationError
+        return errors.value
     }
 
     fun updateData(newData: ServerDetailsModel) {
@@ -54,38 +52,33 @@ class ServerDetailsViewModel @Inject constructor(
             validationData = newData
         )
 
-        data = newData
+        data.value = newData
     }
 
     suspend fun submit(): ServerDetailsSubmitReturn {
-        if (validateData() != null) {
-            return InvalidCredentials
-        }
+        if (validateData().isNotEmpty()) return InvalidCredentials
 
         try {
-            val result = runBlocking {
-                isLoading = true
+            isLoading.value = true
 
+            val result = withContext(Dispatchers.IO) {
                 apiTestService.test(
-                    serverUrl = data.url,
-                    serverPort = data.port.toInt()
+                    serverUrl = data.value.url,
+                    serverPort = data.value.port.toInt()
                 )
             }
 
             if (result is ApiResult.Success) {
-                viewModelScope.launch {
-                    serverDataStore.flow.collect { state ->
-                        serverDataStore.update(
-                            state = state.copy(
-                                serverUrl = data.url,
-                                serverPort = data.port.toInt()
-                            )
-                        )
-                    }
-                }
+                val serverState = serverDataStore.flow.first()
+                serverDataStore.update(
+                    state = serverState.copy(
+                        serverUrl = data.value.url,
+                        serverPort = data.value.port.toInt()
+                    )
+                )
             }
 
-            isLoading = false
+            isLoading.value = false
 
             return when (result) {
                 is ApiResult.Success -> Success

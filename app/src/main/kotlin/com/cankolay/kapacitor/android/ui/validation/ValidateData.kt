@@ -17,10 +17,12 @@ class ValidateData<T : Any>(
             IsNumber::class to IsNumberValidator::validate
         )
 
-    fun validate(state: T): ValidationError? {
-        val errors: MutableList<ValidationError> = mutableListOf()
+    fun validate(state: T): Map<String, Set<ValidationError>> {
+        val errorMap: MutableMap<String, Set<ValidationError>> = mutableMapOf()
 
         model.memberProperties.forEach { property: KProperty1<T, *> ->
+            val errors: MutableSet<ValidationError> = mutableSetOf()
+
             property.annotations.forEach { annotation: Annotation ->
                 val error: ValidationError? = try {
                     validatorMap[annotation.annotationClass]?.invoke(
@@ -35,8 +37,12 @@ class ValidateData<T : Any>(
                     errors.add(error)
                 }
             }
+
+            if (errors.isNotEmpty()) {
+                errorMap[property.name] = errors
+            }
         }
 
-        return errors.firstOrNull()
+        return errorMap
     }
 }

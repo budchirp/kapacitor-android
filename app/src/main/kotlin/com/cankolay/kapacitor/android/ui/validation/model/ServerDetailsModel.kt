@@ -6,5 +6,5 @@ import com.cankolay.kapacitor.android.ui.validation.annotations.NotEmpty
 data class ServerDetailsModel(
     @NotEmpty val url: String = "",
 
-    @NotEmpty @IsNumber val port: String = "3000"
+    @NotEmpty @IsNumber val port: String = "8080"
 )
