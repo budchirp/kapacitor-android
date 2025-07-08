@@ -3,17 +3,16 @@ package com.cankolay.kapacitor.android.data.remote.service
 import com.cankolay.kapacitor.android.data.remote.client.HttpRoutes
 import com.cankolay.kapacitor.android.data.remote.client.KtorClient
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
-import com.cankolay.kapacitor.android.data.remote.model.response.user.CreateUserResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.notes.GetAllNotesResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.notes.GetNoteResponse
 import com.cankolay.kapacitor.android.data.remote.util.FetchUtil
-import com.cankolay.kapacitor.android.ui.validation.model.auth.SignUpModel
 import io.ktor.client.HttpClient
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.get
 import io.ktor.http.path
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class UserService
+class NotesService
 @Inject
 constructor(
     private val ktorClient: KtorClient,
@@ -27,16 +26,23 @@ constructor(
         }
     }
 
-    suspend fun create(
-        data: SignUpModel
-    ): ApiResult<CreateUserResponse> = fetchUtil.safeFetch {
+    suspend fun getAll(
+    ): ApiResult<GetAllNotesResponse> = fetchUtil.safeFetch {
         client
-            .post {
-                setBody(body = data)
-
+            .get {
                 url {
-                    path(HttpRoutes.CREATE_USER)
+                    path(HttpRoutes.GET_NOTES)
                 }
             }
+    }
+
+    suspend fun get(
+        id: String
+    ): ApiResult<GetNoteResponse> = fetchUtil.safeFetch {
+        client.get {
+            url {
+                path(HttpRoutes.GET_NOTES + id)
+            }
+        }
     }
 }
