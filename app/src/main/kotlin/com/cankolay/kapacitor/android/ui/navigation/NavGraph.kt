@@ -5,11 +5,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
+import androidx.navigation.toRoute
 import com.cankolay.kapacitor.android.ui.composable.animatedComposable
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.view.HomeView
 import com.cankolay.kapacitor.android.ui.view.auth.SignInView
 import com.cankolay.kapacitor.android.ui.view.auth.SignUpView
+import com.cankolay.kapacitor.android.ui.view.notes.NoteView
+import com.cankolay.kapacitor.android.ui.view.notes.NotesView
 import com.cankolay.kapacitor.android.ui.view.settings.GeneralSettingsView
 import com.cankolay.kapacitor.android.ui.view.settings.LanguagesView
 import com.cankolay.kapacitor.android.ui.view.settings.SettingsView
@@ -21,6 +24,7 @@ import com.cankolay.kapacitor.android.ui.view.settings.appearance.ThemeView
 import com.cankolay.kapacitor.android.ui.view.welcome.WelcomeView
 import com.cankolay.kapacitor.android.ui.view.welcome.setup.ServerDetailsView
 import com.cankolay.kapacitor.android.ui.view.welcome.setup.ServerPasswordView
+import com.cankolay.kapacitor.android.ui.view.welcome.setup.SignInOrSignUpView
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 
 @Composable
@@ -32,85 +36,71 @@ fun AppNavGraph(appViewModel: AppViewModel = hiltViewModel<AppViewModel>()) {
         navController = navController,
         startDestination = if (appState.isSetupDone) homeView else welcomeView,
     ) {
-        animatedComposable<Route.Welcome>(
-            route = welcomeView
-        ) {
+        animatedComposable<Route.Welcome> {
             WelcomeView()
         }
 
-        animatedComposable<Route.ServerDetails>(
-            route = serverDetailsView
-        ) {
+        animatedComposable<Route.ServerDetails> {
             ServerDetailsView()
         }
 
-        animatedComposable<Route.ServerPassword>(
-            route = serverPasswordView
-        ) {
+        animatedComposable<Route.ServerPassword> {
             ServerPasswordView()
         }
 
-        animatedComposable<Route.SignIn>(
-            route = signInView
-        ) {
+        animatedComposable<Route.SignInOrSignUp> {
+            SignInOrSignUpView()
+        }
+
+        animatedComposable<Route.SignIn> {
             SignInView()
         }
 
-        animatedComposable<Route.SignUp>(
-            route = signUpView
-        ) {
+        animatedComposable<Route.SignUp> {
             SignUpView()
         }
 
-        animatedComposable<Route.Home>(
-            route = homeView
-        ) {
+        animatedComposable<Route.Home> {
             HomeView()
         }
 
-        animatedComposable<Route.Settings>(
-            route = settingsView
-        ) {
+        animatedComposable<Route.Settings> {
             SettingsView()
         }
 
-        animatedComposable<Route.GeneralSettings>(
-            route = generalSettingsView
-        ) {
+        animatedComposable<Route.GeneralSettings> {
             GeneralSettingsView()
         }
 
-        animatedComposable<Route.Languages>(
-            route = languagesView
-        ) {
+        animatedComposable<Route.Languages> {
             LanguagesView()
         }
 
-        animatedComposable<Route.Appearance>(
-            route = appearanceView
-        ) {
+        animatedComposable<Route.Appearance> {
             AppearanceView()
         }
-        animatedComposable<Route.Theme>(
-            route = themeView
-        ) {
+        animatedComposable<Route.Theme> {
             ThemeView()
         }
-        animatedComposable<Route.MaterialYou>(
-            route = materialYouView
-        ) {
+        animatedComposable<Route.MaterialYou> {
             MaterialYouView()
         }
 
-        animatedComposable<Route.About>(
-            route = aboutView
-        ) {
+        animatedComposable<Route.About> {
             AboutView()
         }
-        animatedComposable<Route.Licenses>(
-            route = licensesView
-        ) {
+
+        animatedComposable<Route.Licenses> {
             LicensesView()
+        }
+
+        animatedComposable<Route.Notes> {
+            NotesView()
+        }
+
+        animatedComposable<Route.Note>(defaultLayout = false) { backStackEntry ->
+            val route = backStackEntry.toRoute<Route.Note>()
+            NoteView(id = route.id)
         }
     }
 }

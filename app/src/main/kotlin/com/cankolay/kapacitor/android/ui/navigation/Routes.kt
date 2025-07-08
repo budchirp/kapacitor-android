@@ -6,90 +6,77 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Note
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material.icons.outlined.Colorize
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Gavel
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Note
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.cankolay.kapacitor.android.R
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Route {
-    abstract val id: String
+    @Serializable
+    object Welcome : Route()
 
     @Serializable
-    data class Welcome(
-        override val id: String = "welcome",
-    ) : Route()
+    object ServerDetails : Route()
 
     @Serializable
-    data class ServerDetails(
-        override val id: String = "server_details",
-    ) : Route()
+    object ServerPassword : Route()
 
     @Serializable
-    data class ServerPassword(
-        override val id: String = "server_password",
-    ) : Route()
+    object SignInOrSignUp : Route()
 
     @Serializable
-    data class SignIn(
-        override val id: String = "auth/signin",
-    ) : Route()
+    object SignIn : Route()
 
     @Serializable
-    data class SignUp(
-        override val id: String = "auth/signup",
-    ) : Route()
+    object SignUp : Route()
 
     @Serializable
-    data class Home(
-        override val id: String = "home",
-    ) : Route()
+    object Home : Route()
 
     @Serializable
-    data class Settings(
-        override val id: String = "settings",
-    ) : Route()
+    object Settings : Route()
 
     @Serializable
-    data class GeneralSettings(
-        override val id: String = "settings/general",
-    ) : Route()
+    object GeneralSettings : Route()
 
     @Serializable
-    data class Appearance(
-        override val id: String = "settings/appearance",
-    ) : Route()
+    object Appearance : Route()
 
     @Serializable
-    data class Theme(
-        override val id: String = "settings/appearance/theme",
-    ) : Route()
+    object Theme : Route()
 
     @Serializable
-    data class MaterialYou(
-        override val id: String = "settings/appearance/material-you",
-    ) : Route()
+    object MaterialYou : Route()
 
     @Serializable
-    data class Languages(
-        override val id: String = "settings/languages",
-    ) : Route()
+    object Languages : Route()
 
     @Serializable
-    data class About(
-        override val id: String = "settings/about",
-    ) : Route()
+    object About : Route()
 
     @Serializable
-    data class Licenses(
-        override val id: String = "settings/about/licenses",
-    ) : Route()
+    object Licenses : Route()
+
+    @Serializable
+    object Notes : Route()
+
+    @Serializable
+    data class Note(val id: String = "") : Route()
 }
 
 data class RouteInfo(
@@ -99,20 +86,22 @@ data class RouteInfo(
     val outlinedIcon: ImageVector
 )
 
-val welcomeView = Route.Welcome()
-val serverDetailsView = Route.ServerDetails()
-val serverPasswordView = Route.ServerPassword()
-val homeView = Route.Home()
-val settingsView = Route.Settings()
-val generalSettingsView = Route.GeneralSettings()
-val appearanceView = Route.Appearance()
-val themeView = Route.Theme()
-val materialYouView = Route.MaterialYou()
-val languagesView = Route.Languages()
-val aboutView = Route.About()
-val licensesView = Route.Licenses()
-val signInView = Route.SignIn()
-val signUpView = Route.SignUp()
+val welcomeView = Route.Welcome
+val serverDetailsView = Route.ServerDetails
+val serverPasswordView = Route.ServerPassword
+val signInOrSignUpView = Route.SignInOrSignUp
+val signInView = Route.SignIn
+val signUpView = Route.SignUp
+val homeView = Route.Home
+val settingsView = Route.Settings
+val generalSettingsView = Route.GeneralSettings
+val appearanceView = Route.Appearance
+val themeView = Route.Theme
+val materialYouView = Route.MaterialYou
+val languagesView = Route.Languages
+val aboutView = Route.About
+val licensesView = Route.Licenses
+val notesView = Route.Notes
 
 val routeInfos = mapOf(
     welcomeView to RouteInfo(
@@ -133,15 +122,21 @@ val routeInfos = mapOf(
         icon = Icons.Filled.Settings,
         outlinedIcon = Icons.Outlined.Settings
     ),
+    signInOrSignUpView to RouteInfo(
+        title = R.string.auth_sign_in_or_sign_up,
+        description = R.string.empty,
+        icon = Icons.Filled.Person,
+        outlinedIcon = Icons.Outlined.Person
+    ),
     signInView to RouteInfo(
-        title = R.string.sign_in,
-        description = R.string.sign_in_desc,
+        title = R.string.auth_sign_in,
+        description = R.string.auth_sign_in_desc,
         icon = Icons.Filled.Person,
         outlinedIcon = Icons.Outlined.Person
     ),
     signUpView to RouteInfo(
-        title = R.string.sign_up,
-        description = R.string.sign_up_desc,
+        title = R.string.auth_sign_up,
+        description = R.string.auth_sign_up_desc,
         icon = Icons.Filled.Person,
         outlinedIcon = Icons.Outlined.Person
     ),
@@ -167,52 +162,51 @@ val routeInfos = mapOf(
         title = R.string.appearance,
         description = R.string.appearance_desc,
         icon = Icons.Filled.Palette,
-        outlinedIcon = Icons.Filled.Palette
+        outlinedIcon = Icons.Outlined.Palette
     ),
     themeView to RouteInfo(
         title = R.string.appearance_theme,
         description = R.string.appearance_theme_desc,
         icon = Icons.Filled.DarkMode,
-        outlinedIcon = Icons.Filled.DarkMode
+        outlinedIcon = Icons.Outlined.DarkMode
     ),
     materialYouView to RouteInfo(
         title = R.string.appearance_material_you,
         description = R.string.appearance_material_you_desc,
         icon = Icons.Filled.Colorize,
-        outlinedIcon = Icons.Filled.Colorize
+        outlinedIcon = Icons.Outlined.Colorize
     ),
     languagesView to RouteInfo(
         title = R.string.languages,
         description = R.string.languages_desc,
         icon = Icons.Filled.Translate,
-        outlinedIcon = Icons.Filled.Translate
+        outlinedIcon = Icons.Outlined.Translate
     ),
     aboutView to RouteInfo(
         title = R.string.about,
         description = R.string.about_desc,
         icon = Icons.Filled.Info,
-        outlinedIcon = Icons.Filled.Info
+        outlinedIcon = Icons.Outlined.Info
     ),
     licensesView to RouteInfo(
         title = R.string.licenses,
         description = R.string.licenses_desc,
         icon = Icons.Filled.Gavel,
-        outlinedIcon = Icons.Filled.Gavel
+        outlinedIcon = Icons.Outlined.Gavel
+    ),
+    notesView to RouteInfo(
+        title = R.string.notes,
+        description = R.string.notes,
+        icon = Icons.Filled.Note,
+        outlinedIcon = Icons.Outlined.Note
     )
 )
 
 val drawerRoutes = listOf(homeView, settingsView)
 val mainRoutes = listOf(welcomeView, homeView, settingsView)
+val featureRoutes = listOf(notesView)
 
-val welcomeRoutes = listOf(serverDetailsView, serverPasswordView)
-val authRoutes = listOf(signInView, signUpView)
 val settingRoutes =
     listOf(generalSettingsView, appearanceView, languagesView, aboutView)
 val appearanceRoutes = listOf(themeView, materialYouView)
 val aboutRoutes = listOf(licensesView)
-
-val allRoutes: List<Route> =
-    mainRoutes + welcomeRoutes + authRoutes + settingRoutes + appearanceRoutes + aboutRoutes + signInView
-
-fun List<Route>.findByDestination(id: String): Route =
-    allRoutes.find { route: Route -> route.id == id } ?: homeView
