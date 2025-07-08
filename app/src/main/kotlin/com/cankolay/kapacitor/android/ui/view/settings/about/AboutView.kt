@@ -195,21 +195,5 @@ fun DevCard() {
                 Icon(icon = painterResource(id = R.drawable.ic_github))
             },
         )
-
-        val devXUrl = stringResource(id = R.string.dev_x_url)
-        ListItem(
-            title = stringResource(id = R.string.about_follow_on, "X"),
-            description =
-                stringResource(
-                    id = R.string.about_follow_on_desc,
-                    "X",
-                ),
-            onClick = {
-                activityLauncher.launch(Intent(Intent.ACTION_VIEW, devXUrl.toUri()))
-            },
-            firstItem = {
-                Icon(icon = painterResource(id = R.drawable.ic_x))
-            },
-        )
     }
 }
