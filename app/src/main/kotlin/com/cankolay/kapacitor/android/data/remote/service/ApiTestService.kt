@@ -3,8 +3,8 @@ package com.cankolay.kapacitor.android.data.remote.service
 import com.cankolay.kapacitor.android.data.remote.client.HttpRoutes
 import com.cankolay.kapacitor.android.data.remote.client.KtorClient
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
-import com.cankolay.kapacitor.android.data.remote.model.response.GetVersionEndpointResponse
-import com.cankolay.kapacitor.android.data.remote.model.response.TestEndpointResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.GetVersionResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.TestResponse
 import com.cankolay.kapacitor.android.data.remote.util.FetchUtil
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,7 +31,7 @@ constructor(
     suspend fun test(
         serverUrl: String,
         serverPort: Int,
-    ): ApiResult<TestEndpointResponse> {
+    ): ApiResult<TestResponse> {
         return fetchUtil.safeFetch {
             val body =
                 client
@@ -41,7 +41,7 @@ constructor(
                             port = serverPort
                             path(HttpRoutes.TEST)
                         }
-                    }.body<TestEndpointResponse>()
+                    }.body<TestResponse>()
 
             return@safeFetch ApiResult.Success(data = body)
         }
@@ -49,7 +49,7 @@ constructor(
 
     suspend fun getVersion(
         serverPassword: String
-    ): ApiResult<GetVersionEndpointResponse> {
+    ): ApiResult<GetVersionResponse> {
         return fetchUtil.safeFetch {
             val body =
                 client
@@ -59,7 +59,7 @@ constructor(
                         }
 
                         header("X-Server-Password", serverPassword)
-                    }.body<GetVersionEndpointResponse>()
+                    }.body<GetVersionResponse>()
 
             return@safeFetch ApiResult.Success(data = body)
         }

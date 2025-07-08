@@ -1,8 +1,13 @@
 package com.cankolay.kapacitor.android.ui.theme
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.view.Window
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.cankolay.kapacitor.android.ui.model.PaletteStyle
 import com.kyant.m3color.hct.Hct
 import com.kyant.m3color.scheme.SchemeContent
 import com.kyant.m3color.scheme.SchemeExpressive
@@ -75,3 +80,10 @@ fun dynamicColorScheme(
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun Int.toColor(): Color = Color(color = this)
+
+tailrec fun Context.findWindow(): Window? =
+    when (this) {
+        is Activity -> window
+        is ContextWrapper -> baseContext.findWindow()
+        else -> null
+    }

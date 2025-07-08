@@ -11,7 +11,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.cankolay.kapacitor.android.ui.composables.AppLayout
+import com.cankolay.kapacitor.android.ui.composable.AppLayout
 import com.cankolay.kapacitor.android.ui.composition.ProvideDrawerState
 import com.cankolay.kapacitor.android.ui.composition.ProvideNavController
 import com.cankolay.kapacitor.android.ui.navigation.AppNavGraph
