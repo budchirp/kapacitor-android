@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Kapacitor</string>
-    <string name="app_github_url" translatable="false">https://github.com/budchirp/kapacitor</string>
+    <string name="app_github_url" translatable="false">https://github.com/budchirp/kapacitor-android</string>
 
     <string name="dev_username" translatable="false">budchirp</string>
     <string name="dev_name" translatable="false">Can Kolay</string>
     <string name="dev_website_url" translatable="false">https://cankolay.com</string>
     <string name="dev_github_url" translatable="false">https://github.com/budchirp</string>
-    <string name="dev_x_url" translatable="false">https://x.com/budchirp</string>
 
     <string name="empty" translatable="false" />
 
@@ -22,6 +21,8 @@
     <string name="save">Save</string>
     <string name="next">Continue</string>
     <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="loading">Loading</string>
 
     <string name="input_empty">%1$s can\'t be empty</string>
     <string name="input_not_number">%1$s has to be a number</string>
@@ -38,14 +39,16 @@
 
     <string name="server_password">Server password</string>
 
-    <string name="users">Users</string>
+    <string name="auth_sign_in_or_sign_up">Sign in or Sign up</string>
 
-    <string name="users_change_user">Change user</string>
-    <string name="users_no_user_found">No user found</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_sign_in_desc">Sign in to your account</string>
 
-    <string name="create_user">Create user</string>
+    <string name="auth_sign_up">Sign Up</string>
+    <string name="auth_sign_up_desc">Create a new account</string>
 
-    <string name="add_user">Add user</string>
+    <string name="auth_username">Username</string>
+    <string name="auth_password">Password</string>
 
     <string name="home">Home</string>
 
@@ -87,9 +90,6 @@
     <string name="licenses">Open Source Licenses</string>
     <string name="licenses_desc">Libraries used to make this app</string>
 
-    <string name="sign_in">Sign In</string>
-    <string name="sign_in_desc">Sign in to your account</string>
-
-    <string name="sign_up">Sign Up</string>
-    <string name="sign_up_desc">Create a new account</string>
+    <string name="notes">Notes</string>
+    <string name="notes_desc">Notes</string>
 </resources>

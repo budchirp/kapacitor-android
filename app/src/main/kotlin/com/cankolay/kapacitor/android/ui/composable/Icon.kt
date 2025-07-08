@@ -19,9 +19,10 @@ fun Icon(
         contentDescription = null,
         tint = MaterialTheme.colorScheme.onSurface,
         modifier =
-            modifier
+            Modifier
                 .size(size = 24.dp)
-                .requiredSize(size = 24.dp),
+                .requiredSize(size = 24.dp)
+                .then(other = modifier)
     )
 }
 

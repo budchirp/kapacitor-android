@@ -78,7 +78,7 @@ fun ServerDetailsView(
                         },
                         singleLine = true,
                         isError = inputErrors?.isNotEmpty() ?: false,
-                        onValueChange = { text: String ->
+                        onValueChange = { text ->
                             serverDetailsViewModel.updateData(newData = data.copy(url = text))
                         },
                     )
@@ -123,7 +123,7 @@ fun ServerDetailsView(
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         isError = inputErrors?.isNotEmpty() ?: false,
-                        onValueChange = { text: String ->
+                        onValueChange = { text ->
                             serverDetailsViewModel.updateData(newData = data.copy(port = text))
                         },
                     )

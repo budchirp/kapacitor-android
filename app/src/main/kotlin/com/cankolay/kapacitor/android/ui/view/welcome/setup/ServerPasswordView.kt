@@ -37,7 +37,7 @@ import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
 import com.cankolay.kapacitor.android.ui.composable.Icon
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.homeView
+import com.cankolay.kapacitor.android.ui.navigation.signInOrSignUpView
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordViewModel
 import kotlinx.coroutines.launch
@@ -96,7 +96,7 @@ fun ServerPasswordView(
                         visualTransformation = if (isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         isError = inputErrors?.isNotEmpty() ?: false,
-                        onValueChange = { text: String ->
+                        onValueChange = { text ->
                             serverPasswordViewModel.updateData(newData = data.copy(password = text))
                         },
                     )
@@ -140,7 +140,7 @@ fun ServerPasswordView(
                             is ApiResult.Success -> {
                                 appViewModel.setIsDrawerEnabled(enable = true)
 
-                                navController.navigate(route = homeView)
+                                navController.navigate(route = signInOrSignUpView)
                             }
 
                             is ApiResult.Error -> {

@@ -43,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun Layout(
     appViewModel: AppViewModel = hiltViewModel<AppViewModel>(),
-    route: Route,
+    route: Route? = null,
+    title: String? = null,
     content: @Composable () -> Unit,
 ) {
     val navController = LocalNavController.current
@@ -65,10 +66,14 @@ fun Layout(
             .fillMaxSize()
             .nestedScroll(connection = scrollBehavior.nestedScrollConnection),
         topBar = {
+            val routeInfo = routeInfos[route]
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = routeInfos[route]!!.title),
+                        text = title
+                            ?: if (routeInfo?.title != null) stringResource(
+                                id = routeInfo.title
+                            ) else "",
                         style = MaterialTheme.typography.titleLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -77,13 +82,14 @@ fun Layout(
                 navigationIcon = {
                     var showBack = false
                     var showMenu = true
-                    run stop@{
+
+                    run {
                         mainRoutes.forEach { _route ->
-                            if (route.id == _route.id) {
+                            if (route == _route) {
                                 showBack = false
                                 showMenu = isDrawerEnabled
 
-                                return@stop
+                                return@run
                             } else {
                                 showBack = true
                                 showMenu = false

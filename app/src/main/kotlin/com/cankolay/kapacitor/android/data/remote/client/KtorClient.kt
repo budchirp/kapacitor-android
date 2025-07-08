@@ -7,17 +7,17 @@ import com.cankolay.kapacitor.android.data.datastore.ServerDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.BearerTokens
-import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
@@ -29,7 +29,7 @@ constructor(
     private val serverDataStore: ServerDataStore,
     private val authDataStore: AuthDataStore
 ) {
-    suspend fun getClient(): HttpClient {
+    suspend fun getClient(useServerPassword: Boolean = true): HttpClient {
         val serverState = serverDataStore.flow.first()
         val authState =
             authDataStore.flow.first()
@@ -41,18 +41,18 @@ constructor(
                     host = serverState.serverUrl
                     port = serverState.serverPort
                 }
+
+                if (useServerPassword) {
+                    header(key = "X-Server-Password", value = serverState.serverPassword)
+                }
+
+                header(key = "Authorization", value = "Bearer ${authState.token}")
+
+                contentType(ContentType.Application.Json)
             }
 
             install(plugin = HttpTimeout) {
                 requestTimeoutMillis = 10 * 1000
-            }
-
-            install(plugin = Auth) {
-                bearer {
-                    loadTokens {
-                        BearerTokens(accessToken = authState.token, refreshToken = "")
-                    }
-                }
             }
 
             install(plugin = ContentNegotiation) {
@@ -60,6 +60,8 @@ constructor(
                     json =
                         Json {
                             ignoreUnknownKeys = true
+                            coerceInputValues = true
+                            prettyPrint = true
                         },
                 )
             }
@@ -67,7 +69,7 @@ constructor(
             if (BuildConfig.DEBUG) {
                 install(plugin = Logging) {
                     logger = Logger.DEFAULT
-                    level = LogLevel.HEADERS
+                    level = LogLevel.ALL
                     sanitizeHeader { header: String -> header == HttpHeaders.Authorization }
                     sanitizeHeader { header: String -> header == "X-Server-Password" }
                     logger =

@@ -1,4 +1,4 @@
-package com.cankolay.kapacitor.android.data.remote.model.response
+package com.cankolay.kapacitor.android.data.remote.model.response.server
 
 import com.cankolay.kapacitor.android.data.remote.model.ApiResponse
 import kotlinx.serialization.Serializable

@@ -1,5 +1,6 @@
 package com.cankolay.kapacitor.android.ui.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.cankolay.kapacitor.android.R
@@ -40,6 +42,7 @@ import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.navigation.drawerRoutes
 import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 import com.cankolay.kapacitor.android.ui.navigation.settingsView
+import com.cankolay.kapacitor.android.ui.navigation.signInOrSignUpView
 import com.cankolay.kapacitor.android.ui.util.UiUtil
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
 import kotlinx.coroutines.launch
@@ -100,6 +103,7 @@ fun Drawer(
     }
 }
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun DrawerContent() {
     val navController = LocalNavController.current
@@ -159,9 +163,7 @@ fun DrawerContent() {
                 .fillMaxHeight(),
         verticalArrangement = Arrangement.Bottom,
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination =
-            navBackStackEntry?.destination?.route
+        val backStackEntry by navController.currentBackStackEntryAsState()
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -171,13 +173,13 @@ fun DrawerContent() {
                 drawerRoutes.map { route ->
                     val routeInfo = routeInfos[route]!!
                     val selected =
-                        currentDestination?.contains(route.id, ignoreCase = true) ?: false
+                        backStackEntry?.destination?.hasRoute(route = route::class) ?: false
 
                     NavigationDrawerItem(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         selected = selected,
                         onClick = {
-                            if (currentDestination != route.id) {
+                            if (!selected) {
                                 navController.navigate(
                                     route = route,
                                 )
@@ -196,7 +198,7 @@ fun DrawerContent() {
             NavigationDrawerItem(
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 label = {
-                    Text(text = stringResource(id = R.string.users_change_user))
+                    Text(text = stringResource(id = R.string.auth_sign_in_or_sign_up))
                 },
                 selected = true,
                 icon = {
@@ -205,6 +207,8 @@ fun DrawerContent() {
                 onClick = {
                     if (windowSizeClass != WindowWidthSizeClass.EXPANDED) {
                         coroutineScope.launch {
+                            navController.navigate(route = signInOrSignUpView)
+
                             drawerState.apply {
                                 close()
                             }

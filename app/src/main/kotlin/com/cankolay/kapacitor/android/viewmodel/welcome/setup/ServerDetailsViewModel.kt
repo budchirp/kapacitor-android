@@ -1,12 +1,12 @@
 package com.cankolay.kapacitor.android.viewmodel.welcome.setup
 
 import androidx.lifecycle.ViewModel
-import com.cankolay.kapacitor.android.common.validation.ValidateData
-import com.cankolay.kapacitor.android.common.validation.ValidationError
-import com.cankolay.kapacitor.android.common.validation.model.welcome.setup.ServerDetailsModel
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
-import com.cankolay.kapacitor.android.data.remote.model.response.TestResponse
+import com.cankolay.kapacitor.android.data.remote.model.response.server.TestResponse
 import com.cankolay.kapacitor.android.domain.usecase.welcome.setup.TestServerConnectionUseCase
+import com.cankolay.kapacitor.android.ui.validation.ValidateData
+import com.cankolay.kapacitor.android.ui.validation.ValidationError
+import com.cankolay.kapacitor.android.ui.validation.model.welcome.setup.ServerDetailsModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
