@@ -1,6 +1,6 @@
-package com.cankolay.kapacitor.android.common.validation.validator
+package com.cankolay.kapacitor.android.ui.validation.validator
 
-import com.cankolay.kapacitor.android.common.validation.ValidationError
+import com.cankolay.kapacitor.android.ui.validation.ValidationError
 
 object IsNumberValidator : IValidator {
     override fun validate(property: String, value: Any?): ValidationError? {

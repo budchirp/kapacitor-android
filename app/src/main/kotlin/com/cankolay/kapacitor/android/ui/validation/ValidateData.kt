@@ -1,9 +1,9 @@
-package com.cankolay.kapacitor.android.common.validation
+package com.cankolay.kapacitor.android.ui.validation
 
-import com.cankolay.kapacitor.android.common.validation.annotations.IsNumber
-import com.cankolay.kapacitor.android.common.validation.annotations.NotEmpty
-import com.cankolay.kapacitor.android.common.validation.validator.IsNumberValidator
-import com.cankolay.kapacitor.android.common.validation.validator.NotEmptyValidator
+import com.cankolay.kapacitor.android.ui.validation.annotations.IsNumber
+import com.cankolay.kapacitor.android.ui.validation.annotations.NotEmpty
+import com.cankolay.kapacitor.android.ui.validation.validator.IsNumberValidator
+import com.cankolay.kapacitor.android.ui.validation.validator.NotEmptyValidator
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
