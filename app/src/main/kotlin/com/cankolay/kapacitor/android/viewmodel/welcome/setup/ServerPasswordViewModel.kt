@@ -1,36 +1,20 @@
 package com.cankolay.kapacitor.android.viewmodel.welcome.setup
 
 import androidx.lifecycle.ViewModel
-import com.cankolay.kapacitor.android.data.datastore.AppDataStore
-import com.cankolay.kapacitor.android.data.datastore.ServerDataStore
-import com.cankolay.kapacitor.android.data.remote.model.APIErrorReason
+import com.cankolay.kapacitor.android.common.validation.ValidateData
+import com.cankolay.kapacitor.android.common.validation.ValidationError
+import com.cankolay.kapacitor.android.common.validation.model.welcome.setup.ServerPasswordModel
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
-import com.cankolay.kapacitor.android.data.remote.model.ApiResult.Error
-import com.cankolay.kapacitor.android.data.remote.service.ApiTestService
-import com.cankolay.kapacitor.android.ui.validation.ValidateData
-import com.cankolay.kapacitor.android.ui.validation.ValidationError
-import com.cankolay.kapacitor.android.ui.validation.model.ServerPasswordModel
-import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordSubmitReturn.Fail
-import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordSubmitReturn.InvalidCredentials
-import com.cankolay.kapacitor.android.viewmodel.welcome.setup.ServerPasswordSubmitReturn.Success
+import com.cankolay.kapacitor.android.data.remote.model.response.GetVersionResponse
+import com.cankolay.kapacitor.android.domain.usecase.welcome.setup.SubmitServerPasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-enum class ServerPasswordSubmitReturn {
-    Success,
-    Fail,
-    InvalidCredentials
-}
 
 @HiltViewModel
 class ServerPasswordViewModel @Inject constructor(
-    private val serverDataStore: ServerDataStore,
-    private val appDataStore: AppDataStore,
-    private val apiTestService: ApiTestService
+    private val submitPasswordUseCase: SubmitServerPasswordUseCase
 ) :
     ViewModel() {
     var isLoading = MutableStateFlow(value = false)
@@ -57,48 +41,13 @@ class ServerPasswordViewModel @Inject constructor(
         data.value = newData
     }
 
-    suspend fun submit(): ServerPasswordSubmitReturn {
-        if (validateData().isNotEmpty()) return InvalidCredentials
+    suspend fun submit(): ApiResult<GetVersionResponse> {
+        isLoading.value = true
 
-        try {
-            isLoading.value = true
+        val result = submitPasswordUseCase(password = data.value.password)
 
-            val result =
-                withContext(context = Dispatchers.IO) {
-                    apiTestService.getVersion(
-                        serverPassword = data.value.password
-                    )
-                }
-
-            if (result is ApiResult.Success) {
-                val serverState = serverDataStore.flow.first()
-                serverDataStore.update(
-                    state = serverState.copy(
-                        serverPassword = data.value.password
-                    )
-                )
-
-                val appState = appDataStore.flow.first()
-                appDataStore.update(
-                    state = appState.copy(
-                        isSetupDone = true
-                    )
-                )
-            }
-
-            isLoading.value = false
-
-            return when (result) {
-                is ApiResult.Success -> Success
-                is Error -> when (result.reason) {
-                    APIErrorReason.USER -> InvalidCredentials
-                    APIErrorReason.SERVER -> Fail
-                }
-
-                is ApiResult.Fatal -> Fail
-            }
-        } catch (_: Exception) {
-            return Fail
-        }
+        isLoading.value = false
+        return result
     }
+
 }

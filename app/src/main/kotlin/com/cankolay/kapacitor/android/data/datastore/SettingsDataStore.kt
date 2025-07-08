@@ -9,8 +9,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.cankolay.kapacitor.android.data.datastore.model.SettingsState
 import com.cankolay.kapacitor.android.data.datastore.model.defaultSettingsState
 import com.cankolay.kapacitor.android.ui.model.Theme
-import com.cankolay.kapacitor.android.ui.utils.fromColor
-import com.cankolay.kapacitor.android.ui.utils.fromHex
+import com.cankolay.kapacitor.android.ui.util.fromColor
+import com.cankolay.kapacitor.android.ui.util.fromHex
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

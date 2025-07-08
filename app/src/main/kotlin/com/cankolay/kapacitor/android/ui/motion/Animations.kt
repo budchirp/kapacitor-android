@@ -12,7 +12,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
-import com.cankolay.kapacitor.android.ui.composables.initialOffset
+import com.cankolay.kapacitor.android.ui.composable.initialOffset
 
 object MotionConstants {
     const val ENTER_DURATION = 400
@@ -38,11 +38,11 @@ fun slideIn(
     ) +
         fadeIn(
             animationSpec =
-            tween(
-                durationMillis = durationMillis.ForIncoming,
-                delayMillis = durationMillis.ForOutgoing,
-                easing = LinearOutSlowInEasing,
-            ),
+                tween(
+                    durationMillis = durationMillis.ForIncoming,
+                    delayMillis = durationMillis.ForOutgoing,
+                    easing = LinearOutSlowInEasing,
+                ),
         )
 
 fun slideOut(
@@ -58,11 +58,11 @@ fun slideOut(
     ) +
         fadeOut(
             animationSpec =
-            tween(
-                durationMillis = durationMillis.ForOutgoing,
-                delayMillis = 0,
-                easing = FastOutLinearInEasing,
-            ),
+                tween(
+                    durationMillis = durationMillis.ForOutgoing,
+                    delayMillis = 0,
+                    easing = FastOutLinearInEasing,
+                ),
         )
 
 fun slideInY(
@@ -76,11 +76,11 @@ fun slideInY(
     ) +
         fadeIn(
             animationSpec =
-            tween(
-                durationMillis = durationMillis.ForIncoming,
-                delayMillis = durationMillis.ForOutgoing + delayMillis,
-                easing = LinearOutSlowInEasing,
-            ),
+                tween(
+                    durationMillis = durationMillis.ForIncoming,
+                    delayMillis = durationMillis.ForOutgoing + delayMillis,
+                    easing = LinearOutSlowInEasing,
+                ),
         )
 
 fun slideOutY(
@@ -94,9 +94,9 @@ fun slideOutY(
     ) +
         fadeOut(
             animationSpec =
-            tween(
-                durationMillis = durationMillis.ForOutgoing,
-                delayMillis = delayMillis,
-                easing = FastOutLinearInEasing,
-            ),
+                tween(
+                    durationMillis = durationMillis.ForOutgoing,
+                    delayMillis = delayMillis,
+                    easing = FastOutLinearInEasing,
+                ),
         )
