@@ -9,6 +9,7 @@
     <string name="next">Devam</string>
     <string name="cancel">İptal et</string>
 
+    <string name="success">Başarılı</string>
     <string name="input_empty">%1$s boş olamaz</string>
     <string name="input_not_number">%1$s sayı olmak zorunda</string>
 
@@ -25,20 +26,9 @@
 
     <string name="server_password">Sunucu şifresi</string>
 
-    <string name="users">Kullanıcılar</string>
-
-    <string name="users_change_user">Kullanıcı değiştir</string>
-    <string name="users_no_user_found">Kullanıcı bulunamadı</string>
-
-    <string name="create_user">Kullanıcı oluştur</string>
-
-    <string name="add_user">Kullanıcı ekle</string>
-
     <string name="settings">Ayarlar</string>
 
-    <string name="general_settings">Genel Ayarlar</string>
-    <string name="general_settings_desc">Genel Ayarlar</string>
-
+    <string name="server_settings_desc">Sunucu url, port ve şifre ayarları</string>
     <string name="appearance">Görünüm</string>
     <string name="appearance_desc">Tema, Material You</string>
 
@@ -71,6 +61,20 @@
 
     <string name="licenses">Açık Kaynak Lisansları</string>
     <string name="licenses_desc">Bu uygulamanın yapımında kullanılan kütüphaneler</string>
+    <string name="profile_desc">Profil</string>
     <string name="home">Ana sayfa</string>
+    <string name="submit">Gönder</string>
+    <string name="loading">Yükleniyor</string>
+    <string name="auth_sign_in_or_sign_up">Giriş yap veya Kayıt ol</string>
+    <string name="auth_sign_in">Giriş yap</string>
+    <string name="auth_sign_in_desc">Hesabına giriş yap</string>
+    <string name="auth_sign_up">Kayıt ol</string>
+    <string name="auth_sign_up_desc">Yeni hesap aç</string>
+    <string name="auth_username">Kullanıcı adı</string>
+    <string name="auth_password">Şifre</string>
+    <string name="profile">Profil</string>
+    <string name="server_settings">Sunucu ayarları</string>
+    <string name="notes">Notlar</string>
+    <string name="notes_desc">Notlar</string>
 
 </resources>
