@@ -38,12 +38,12 @@ constructor(
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTP
-                    host = serverState.serverUrl
-                    port = serverState.serverPort
+                    host = serverState.url
+                    port = serverState.port
                 }
 
                 if (useServerPassword) {
-                    header(key = "X-Server-Password", value = serverState.serverPassword)
+                    header(key = "X-Server-Password", value = serverState.password)
                 }
 
                 header(key = "Authorization", value = "Bearer ${authState.token}")

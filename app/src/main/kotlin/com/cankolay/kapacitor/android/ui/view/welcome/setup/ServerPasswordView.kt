@@ -65,13 +65,14 @@ fun ServerPasswordView(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .padding(vertical = 16.dp)
+                .weight(weight = 1f),
             verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         ) {
             item {
                 Column(
                     modifier = Modifier
-                        .padding(all = 16.dp),
+                        .padding(horizontal = 16.dp),
                 ) {
                     var isPasswordHidden by remember {
                         mutableStateOf(value = true)
@@ -110,7 +111,7 @@ fun ServerPasswordView(
                                     context.packageName
                                 ), stringResource(
                                     id = context.resources.getIdentifier(
-                                        "server_details_${error.property}",
+                                        "server_${error.property}",
                                         "string",
                                         context.packageName
                                     )

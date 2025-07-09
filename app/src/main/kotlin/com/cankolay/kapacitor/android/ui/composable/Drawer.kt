@@ -40,11 +40,11 @@ import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composition.LocalDrawerState
 import com.cankolay.kapacitor.android.ui.composition.LocalNavController
 import com.cankolay.kapacitor.android.ui.navigation.drawerRoutes
+import com.cankolay.kapacitor.android.ui.navigation.profileView
 import com.cankolay.kapacitor.android.ui.navigation.routeInfos
-import com.cankolay.kapacitor.android.ui.navigation.settingsView
-import com.cankolay.kapacitor.android.ui.navigation.signInOrSignUpView
 import com.cankolay.kapacitor.android.ui.util.UiUtil
 import com.cankolay.kapacitor.android.viewmodel.AppViewModel
+import com.cankolay.kapacitor.android.viewmodel.user.profile.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -105,11 +105,15 @@ fun Drawer(
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun DrawerContent() {
+fun DrawerContent(
+    profileViewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>(),
+) {
     val navController = LocalNavController.current
 
     val coroutineScope = rememberCoroutineScope()
     val drawerState = LocalDrawerState.current
+
+    val user by profileViewModel.user.collectAsState()
 
     val windowSizeClass =
         currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
@@ -196,18 +200,18 @@ fun DrawerContent() {
             HorizontalDivider()
 
             NavigationDrawerItem(
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                modifier = Modifier.padding(paddingValues = NavigationDrawerItemDefaults.ItemPadding),
                 label = {
-                    Text(text = stringResource(id = R.string.auth_sign_in_or_sign_up))
+                    Text(text = user?.profile?.name ?: stringResource(id = R.string.loading))
                 },
                 selected = true,
                 icon = {
-                    Icon(icon = routeInfos[settingsView]!!.icon)
+                    Icon(icon = routeInfos[profileView]!!.icon)
                 },
                 onClick = {
                     if (windowSizeClass != WindowWidthSizeClass.EXPANDED) {
                         coroutineScope.launch {
-                            navController.navigate(route = signInOrSignUpView)
+                            navController.navigate(route = profileView)
 
                             drawerState.apply {
                                 close()

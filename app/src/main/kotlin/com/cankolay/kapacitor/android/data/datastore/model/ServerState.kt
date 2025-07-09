@@ -1,14 +1,14 @@
 package com.cankolay.kapacitor.android.data.datastore.model
 
 data class ServerState(
-    val serverUrl: String,
-    val serverPort: Int,
-    val serverPassword: String,
+    val url: String,
+    val port: Int,
+    val password: String,
 )
 
 fun defaultServerState(): ServerState =
     ServerState(
-        serverUrl = "",
-        serverPort = 8080,
-        serverPassword = "",
+        url = "",
+        port = 8080,
+        password = "",
     )

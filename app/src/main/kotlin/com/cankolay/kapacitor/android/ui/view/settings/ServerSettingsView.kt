@@ -1,4 +1,4 @@
-package com.cankolay.kapacitor.android.ui.view.auth
+package com.cankolay.kapacitor.android.ui.view.settings
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -25,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,24 +35,18 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cankolay.kapacitor.android.R
-import com.cankolay.kapacitor.android.data.remote.model.ApiResult
 import com.cankolay.kapacitor.android.ui.composable.Icon
-import com.cankolay.kapacitor.android.ui.composition.LocalNavController
-import com.cankolay.kapacitor.android.ui.navigation.signInView
-import com.cankolay.kapacitor.android.viewmodel.auth.SignUpViewModel
+import com.cankolay.kapacitor.android.viewmodel.settings.ServerSettingsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpView(
-    signUpViewModel: SignUpViewModel = hiltViewModel<SignUpViewModel>()
-) {
+fun ServerSettingsView(serverSettingsViewModel: ServerSettingsViewModel = hiltViewModel<ServerSettingsViewModel>()) {
     val context = LocalContext.current
-    val navController = LocalNavController.current
 
-    val data by signUpViewModel.data.collectAsState()
-    val errors by signUpViewModel.errors.collectAsState()
+    val data by serverSettingsViewModel.data.collectAsState()
+    val errors by serverSettingsViewModel.errors.collectAsState()
 
-    val isLoading by signUpViewModel.isLoading.collectAsState()
+    val isLoading by serverSettingsViewModel.isLoading.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -64,31 +58,30 @@ fun SignUpView(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .weight(weight = 1f),
+                .padding(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         ) {
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
                 ) {
-                    val inputErrors = errors["username"]
+                    val inputErrors = errors["url"]
 
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = data.username,
+                        value = data.url,
                         label = {
-                            Text(text = stringResource(id = R.string.auth_username))
+                            Text(text = stringResource(id = R.string.server_details_url))
                         },
                         leadingIcon = {
-                            Icon(icon = Icons.Filled.Person)
+                            Icon(icon = Icons.Filled.Language)
                         },
                         singleLine = true,
                         isError = inputErrors?.isNotEmpty() ?: false,
                         onValueChange = { text ->
-                            signUpViewModel.updateData(newData = data.copy(username = text))
+                            serverSettingsViewModel.updateData(newData = data.copy(url = text))
                         },
                     )
 
@@ -101,7 +94,7 @@ fun SignUpView(
                                     context.packageName
                                 ), stringResource(
                                     id = context.resources.getIdentifier(
-                                        "auth_${error.property}",
+                                        "server_details_${error.property}",
                                         "string",
                                         context.packageName
                                     )
@@ -116,7 +109,52 @@ fun SignUpView(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                ) {
+                    val inputErrors = errors["port"]
+
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = data.port,
+                        label = {
+                            Text(text = stringResource(id = R.string.server_details_port))
+                        },
+                        leadingIcon = {
+                            Icon(icon = Icons.Filled.Numbers)
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = inputErrors?.isNotEmpty() ?: false,
+                        onValueChange = { text ->
+                            serverSettingsViewModel.updateData(newData = data.copy(port = text))
+                        },
+                    )
+
+                    inputErrors?.forEach { error ->
+                        Text(
+                            text = stringResource(
+                                id = context.resources.getIdentifier(
+                                    "input_${error.message}",
+                                    "string",
+                                    context.packageName
+                                ), stringResource(
+                                    id = context.resources.getIdentifier(
+                                        "server_details_${error.property}",
+                                        "string",
+                                        context.packageName
+                                    )
+                                )
+                            )
+                        )
+                    }
+                }
+            }
+
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
                     var isPasswordHidden by remember {
                         mutableStateOf(value = true)
@@ -128,7 +166,7 @@ fun SignUpView(
                         modifier = Modifier.fillMaxWidth(),
                         value = data.password,
                         label = {
-                            Text(text = stringResource(id = R.string.auth_password))
+                            Text(text = stringResource(id = R.string.server_password))
                         },
                         leadingIcon = {
                             Icon(icon = Icons.Filled.Lock)
@@ -138,12 +176,11 @@ fun SignUpView(
                                 Icon(icon = if (isPasswordHidden) Icons.Filled.Visibility else Icons.Filled.VisibilityOff)
                             }
                         },
-                        singleLine = true,
-                        isError = inputErrors?.isNotEmpty() ?: false,
                         visualTransformation = if (isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        isError = inputErrors?.isNotEmpty() ?: false,
                         onValueChange = { text ->
-                            signUpViewModel.updateData(newData = data.copy(password = text))
+                            serverSettingsViewModel.updateData(newData = data.copy(password = text))
                         },
                     )
 
@@ -156,7 +193,7 @@ fun SignUpView(
                                     context.packageName
                                 ), stringResource(
                                     id = context.resources.getIdentifier(
-                                        "auth_${error.property}",
+                                        "server_details_${error.property}",
                                         "string",
                                         context.packageName
                                     )
@@ -166,46 +203,31 @@ fun SignUpView(
                     }
                 }
             }
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
-        ) {
-            val serverFail = stringResource(id = R.string.server_fail)
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    val success = stringResource(id = R.string.success)
 
-            Button(onClick = {
-                if (signUpViewModel.validateData().isEmpty()) {
-                    coroutineScope.launch {
-                        val result = signUpViewModel.submit()
-                        when (result) {
-                            is ApiResult.Success -> {
-                                navController.navigate(route = signInView)
-                            }
+                    Button(onClick = {
+                        if (serverSettingsViewModel.validateData().isEmpty()) {
+                            coroutineScope.launch {
+                                serverSettingsViewModel.submit()
 
-                            is ApiResult.Error -> {
                                 Toast.makeText(
                                     context,
-                                    result.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            is ApiResult.Fatal -> {
-                                Toast.makeText(
-                                    context,
-                                    serverFail,
+                                    success,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
+                    }, enabled = errors.isEmpty() || !isLoading) {
+                        Text(text = stringResource(id = R.string.save))
                     }
                 }
-            }, enabled = errors.isEmpty() || !isLoading) {
-                Text(text = stringResource(id = R.string.submit))
             }
         }
     }

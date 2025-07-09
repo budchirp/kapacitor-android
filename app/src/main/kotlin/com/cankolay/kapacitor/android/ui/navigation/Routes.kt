@@ -46,13 +46,16 @@ sealed class Route {
     object SignUp : Route()
 
     @Serializable
+    object Profile : Route()
+
+    @Serializable
     object Home : Route()
 
     @Serializable
     object Settings : Route()
 
     @Serializable
-    object GeneralSettings : Route()
+    object ServerSettings : Route()
 
     @Serializable
     object Appearance : Route()
@@ -92,9 +95,10 @@ val serverPasswordView = Route.ServerPassword
 val signInOrSignUpView = Route.SignInOrSignUp
 val signInView = Route.SignIn
 val signUpView = Route.SignUp
+val profileView = Route.Profile
 val homeView = Route.Home
 val settingsView = Route.Settings
-val generalSettingsView = Route.GeneralSettings
+val serverSettingsView = Route.ServerSettings
 val appearanceView = Route.Appearance
 val themeView = Route.Theme
 val materialYouView = Route.MaterialYou
@@ -140,6 +144,12 @@ val routeInfos = mapOf(
         icon = Icons.Filled.Person,
         outlinedIcon = Icons.Outlined.Person
     ),
+    profileView to RouteInfo(
+        title = R.string.profile,
+        description = R.string.profile_desc,
+        icon = Icons.Filled.Person,
+        outlinedIcon = Icons.Outlined.Person
+    ),
     homeView to RouteInfo(
         title = R.string.home,
         description = R.string.empty,
@@ -152,9 +162,9 @@ val routeInfos = mapOf(
         icon = Icons.Filled.Settings,
         outlinedIcon = Icons.Outlined.Settings
     ),
-    generalSettingsView to RouteInfo(
-        title = R.string.general_settings,
-        description = R.string.general_settings_desc,
+    serverSettingsView to RouteInfo(
+        title = R.string.server_settings,
+        description = R.string.server_settings_desc,
         icon = Icons.Filled.Settings,
         outlinedIcon = Icons.Outlined.Settings
     ),
@@ -207,6 +217,6 @@ val mainRoutes = listOf(welcomeView, homeView, settingsView)
 val featureRoutes = listOf(notesView)
 
 val settingRoutes =
-    listOf(generalSettingsView, appearanceView, languagesView, aboutView)
+    listOf(profileView, serverSettingsView, appearanceView, languagesView, aboutView)
 val appearanceRoutes = listOf(themeView, materialYouView)
 val aboutRoutes = listOf(licensesView)

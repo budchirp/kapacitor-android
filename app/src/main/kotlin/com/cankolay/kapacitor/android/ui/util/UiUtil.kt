@@ -22,7 +22,6 @@ object UiUtil {
     @Composable
     fun getSystemRoundedCorners(): Dp {
         val context = LocalContext.current
-
         val resId =
             context.resources.getIdentifier("rounded_corner_radius", "dimen", "android")
 

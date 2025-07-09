@@ -2,7 +2,7 @@ package com.cankolay.kapacitor.android.domain.usecase.auth
 
 import com.cankolay.kapacitor.android.data.remote.model.ApiResult
 import com.cankolay.kapacitor.android.data.remote.model.response.user.CreateUserResponse
-import com.cankolay.kapacitor.android.data.remote.service.UserService
+import com.cankolay.kapacitor.android.data.remote.service.user.UserService
 import com.cankolay.kapacitor.android.ui.validation.model.auth.SignUpModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

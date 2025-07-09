@@ -50,7 +50,7 @@ import com.cankolay.kapacitor.android.ui.navigation.materialYouView
 import com.cankolay.kapacitor.android.ui.navigation.routeInfos
 import com.cankolay.kapacitor.android.ui.theme.toColor
 import com.cankolay.kapacitor.android.ui.util.UiUtil
-import com.cankolay.kapacitor.android.viewmodel.SettingsViewModel
+import com.cankolay.kapacitor.android.viewmodel.settings.SettingsViewModel
 import com.kyant.m3color.hct.Hct
 import com.kyant.m3color.scheme.SchemeTonalSpot
 
@@ -322,7 +322,7 @@ private fun RowScope.ColorButton(
 @Composable
 private fun HorizontalPagerPageIndicator(pagerState: PagerState) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        repeat(pagerState.pageCount) { page ->
+        repeat(times = pagerState.pageCount) { page ->
             Box(
                 modifier =
                     Modifier

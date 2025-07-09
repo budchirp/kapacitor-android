@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cankolay.kapacitor.android.R
 import com.cankolay.kapacitor.android.ui.composable.ListItem
 import com.cankolay.kapacitor.android.ui.model.Theme
-import com.cankolay.kapacitor.android.viewmodel.SettingsViewModel
+import com.cankolay.kapacitor.android.viewmodel.settings.SettingsViewModel
 
 @Composable
 fun ThemeView(settingsViewModel: SettingsViewModel = hiltViewModel()) {
@@ -27,7 +27,7 @@ fun ThemeView(settingsViewModel: SettingsViewModel = hiltViewModel()) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(Theme.entries) { theme ->
+            items(items = Theme.entries) { theme ->
                 ListItem(
                     title =
                         stringResource(

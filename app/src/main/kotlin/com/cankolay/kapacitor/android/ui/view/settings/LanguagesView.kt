@@ -23,7 +23,7 @@ fun LanguagesView() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(languages) { language ->
+            items(items = languages) { language ->
                 ListItem(
                     title =
                         stringResource(

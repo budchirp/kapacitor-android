@@ -60,7 +60,7 @@ fun AboutView() {
                 }
             }
 
-            items(aboutRoutes) { route ->
+            items(items = aboutRoutes) { route ->
                 val routeInfo = routeInfos[route]!!
                 ListItem(
                     title = stringResource(id = routeInfo.title),

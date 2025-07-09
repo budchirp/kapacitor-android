@@ -84,7 +84,7 @@ fun LicensesView() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(libraries) { library ->
+            items(items = libraries) { library ->
                 ListItem(
                     title = library.name,
                     description =

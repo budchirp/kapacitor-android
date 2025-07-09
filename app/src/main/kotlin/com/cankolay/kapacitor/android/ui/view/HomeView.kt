@@ -23,8 +23,8 @@ fun HomeView() {
                     .fillMaxWidth()
                     .padding(all = 16.dp),
             columns = GridCells.Fixed(count = 2),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(space = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(space = 16.dp)
         ) {
             items(items = featureRoutes) { route ->
                 GridCard(route = route)

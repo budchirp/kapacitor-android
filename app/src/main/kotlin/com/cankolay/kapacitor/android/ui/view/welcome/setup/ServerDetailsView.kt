@@ -56,14 +56,15 @@ fun ServerDetailsView(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .padding(vertical = 16.dp)
+                .weight(weight = 1f),
             verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         ) {
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        .padding(horizontal = 16.dp),
                 ) {
                     val inputErrors = errors["url"]
 
@@ -107,7 +108,7 @@ fun ServerDetailsView(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        .padding(horizontal = 16.dp),
                 ) {
                     val inputErrors = errors["port"]
 
@@ -190,6 +191,5 @@ fun ServerDetailsView(
                 Text(text = stringResource(id = R.string.next))
             }
         }
-
     }
 }

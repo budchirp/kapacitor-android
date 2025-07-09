@@ -34,11 +34,11 @@ constructor(
     suspend fun update(state: ServerState) {
         dataStore.edit { preferences ->
             preferences[PreferenceKeys.SERVER_URL] =
-                state.serverUrl
+                state.url
             preferences[PreferenceKeys.SERVER_PORT] =
-                state.serverPort
+                state.port
             preferences[PreferenceKeys.SERVER_PASSWORD] =
-                state.serverPassword
+                state.password
         }
     }
 
@@ -53,12 +53,12 @@ constructor(
                 }
             }.map { preferences ->
                 ServerState(
-                    serverUrl = preferences[PreferenceKeys.SERVER_URL]
-                        ?: defaultServerState().serverUrl,
-                    serverPort = preferences[PreferenceKeys.SERVER_PORT]
-                        ?: defaultServerState().serverPort,
-                    serverPassword = preferences[PreferenceKeys.SERVER_PASSWORD]
-                        ?: defaultServerState().serverPassword,
+                    url = preferences[PreferenceKeys.SERVER_URL]
+                        ?: defaultServerState().url,
+                    port = preferences[PreferenceKeys.SERVER_PORT]
+                        ?: defaultServerState().port,
+                    password = preferences[PreferenceKeys.SERVER_PASSWORD]
+                        ?: defaultServerState().password,
                 )
             }
 }

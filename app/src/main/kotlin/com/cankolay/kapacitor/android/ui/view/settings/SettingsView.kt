@@ -19,7 +19,7 @@ fun SettingsView() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(settingRoutes) { route ->
+            items(items = settingRoutes) { route ->
                 val routeInfo = routeInfos[route]!!
                 ListItem(
                     title = stringResource(id = routeInfo.title),

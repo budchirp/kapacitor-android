@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cankolay.kapacitor.android.ui.model.PaletteStyle.Monochrome
 import com.cankolay.kapacitor.android.ui.model.PaletteStyle.TonalSpot
 import com.cankolay.kapacitor.android.ui.util.UiUtil
-import com.cankolay.kapacitor.android.viewmodel.SettingsViewModel
+import com.cankolay.kapacitor.android.viewmodel.settings.SettingsViewModel
 
 @Composable
 fun AppTheme(

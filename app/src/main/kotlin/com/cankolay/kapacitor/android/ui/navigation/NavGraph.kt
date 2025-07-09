@@ -13,14 +13,15 @@ import com.cankolay.kapacitor.android.ui.view.auth.SignInView
 import com.cankolay.kapacitor.android.ui.view.auth.SignUpView
 import com.cankolay.kapacitor.android.ui.view.notes.NoteView
 import com.cankolay.kapacitor.android.ui.view.notes.NotesView
-import com.cankolay.kapacitor.android.ui.view.settings.GeneralSettingsView
 import com.cankolay.kapacitor.android.ui.view.settings.LanguagesView
+import com.cankolay.kapacitor.android.ui.view.settings.ServerSettingsView
 import com.cankolay.kapacitor.android.ui.view.settings.SettingsView
 import com.cankolay.kapacitor.android.ui.view.settings.about.AboutView
 import com.cankolay.kapacitor.android.ui.view.settings.about.LicensesView
 import com.cankolay.kapacitor.android.ui.view.settings.appearance.AppearanceView
 import com.cankolay.kapacitor.android.ui.view.settings.appearance.MaterialYouView
 import com.cankolay.kapacitor.android.ui.view.settings.appearance.ThemeView
+import com.cankolay.kapacitor.android.ui.view.user.profile.ProfileView
 import com.cankolay.kapacitor.android.ui.view.welcome.WelcomeView
 import com.cankolay.kapacitor.android.ui.view.welcome.setup.ServerDetailsView
 import com.cankolay.kapacitor.android.ui.view.welcome.setup.ServerPasswordView
@@ -60,6 +61,10 @@ fun AppNavGraph(appViewModel: AppViewModel = hiltViewModel<AppViewModel>()) {
             SignUpView()
         }
 
+        animatedComposable<Route.Profile> {
+            ProfileView()
+        }
+
         animatedComposable<Route.Home> {
             HomeView()
         }
@@ -68,8 +73,8 @@ fun AppNavGraph(appViewModel: AppViewModel = hiltViewModel<AppViewModel>()) {
             SettingsView()
         }
 
-        animatedComposable<Route.GeneralSettings> {
-            GeneralSettingsView()
+        animatedComposable<Route.ServerSettings> {
+            ServerSettingsView()
         }
 
         animatedComposable<Route.Languages> {

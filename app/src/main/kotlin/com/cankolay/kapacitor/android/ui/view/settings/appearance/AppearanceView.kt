@@ -19,7 +19,7 @@ fun AppearanceView() {
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(appearanceRoutes) { route ->
+            items(items = appearanceRoutes) { route ->
                 val routeInfo = routeInfos[route]!!
                 ListItem(
                     title = stringResource(id = routeInfo.title),

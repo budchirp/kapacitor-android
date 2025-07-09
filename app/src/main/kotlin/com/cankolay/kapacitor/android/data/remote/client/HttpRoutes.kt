@@ -8,4 +8,6 @@ object HttpRoutes {
     const val CREATE_SESSION = "session/"
 
     const val GET_NOTES = "note/"
+
+    const val GET_PROFILE = "user/profile/"
 }
