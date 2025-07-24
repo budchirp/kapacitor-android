@@ -1,9 +1,0 @@
-package com.cankolay.kapacitor.android.ui.validation.model.welcome.setup
-
-import com.cankolay.kapacitor.android.ui.validation.annotations.NotEmpty
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class ServerPasswordModel(
-    @NotEmpty val password: String = ""
-)

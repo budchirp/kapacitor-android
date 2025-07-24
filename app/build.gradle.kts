@@ -76,7 +76,6 @@ android {
 
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 
     androidResources { generateLocaleConfig = true }
@@ -85,29 +84,15 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
+
     implementation(kotlin("reflect"))
 
     implementation(libs.bundles.core)
 
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
-
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-
-    implementation(libs.compose.navigation)
-
-    implementation(libs.bundles.lifecycle)
-
-    implementation(libs.datastore)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.bundles.ktor)
-
-    implementation(libs.m3color)
-
-    implementation(libs.aboutlibraries)
-
-    implementation(libs.coil)
 }

@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kapacitor"
 
+include(":presentation")
+include(":domain")
+include(":data")
 include(":app")
