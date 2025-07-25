@@ -1,7 +1,6 @@
 package com.cankolay.kapacitor.android.presentation.composable
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,15 +18,13 @@ fun Card(
     content: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+            .then(other = if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .then(other = modifier)
+            .fillMaxWidth(),
         shape = shape,
         color = color,
     ) {
-        Column(
-            modifier = Modifier
-                .then(other = if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-                .fillMaxWidth()) {
-            content()
-        }
+        content()
     }
 }

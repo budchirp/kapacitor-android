@@ -9,8 +9,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cankolay.kapacitor.android.presentation.model.PaletteStyle.Monochrome
-import com.cankolay.kapacitor.android.presentation.model.PaletteStyle.TonalSpot
+import com.cankolay.kapacitor.android.presentation.theme.PaletteStyle.Monochrome
+import com.cankolay.kapacitor.android.presentation.theme.PaletteStyle.TonalSpot
 import com.cankolay.kapacitor.android.presentation.util.UiUtil
 import com.cankolay.kapacitor.android.presentation.util.fromHex
 import com.cankolay.kapacitor.android.presentation.viewmodel.settings.SettingsViewModel

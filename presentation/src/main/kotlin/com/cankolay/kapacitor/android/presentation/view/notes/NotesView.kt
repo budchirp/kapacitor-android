@@ -2,6 +2,7 @@ package com.cankolay.kapacitor.android.presentation.view.notes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,7 +36,8 @@ fun NotesView(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(all = 16.dp),
+                    .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             columns = GridCells.Fixed(count = 2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)

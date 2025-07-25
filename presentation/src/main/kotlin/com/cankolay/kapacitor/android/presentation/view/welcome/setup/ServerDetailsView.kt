@@ -3,6 +3,8 @@ package com.cankolay.kapacitor.android.presentation.view.welcome.setup
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,8 +58,8 @@ fun ServerDetailsView(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
                 .weight(weight = 1f),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         ) {
             item {
@@ -151,16 +153,15 @@ fun ServerDetailsView(
             }
         }
 
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 16.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
+            verticalAlignment = Alignment.Bottom,
         ) {
             val serverFail = stringResource(id = R.string.server_fail)
 
-            Button(onClick = {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = {
                 if (serverDetailsViewModel.validateData().isEmpty()) {
                     coroutineScope.launch {
                         val result = serverDetailsViewModel.submit()

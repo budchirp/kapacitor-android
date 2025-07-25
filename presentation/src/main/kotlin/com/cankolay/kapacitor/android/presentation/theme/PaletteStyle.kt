@@ -1,4 +1,4 @@
-package com.cankolay.kapacitor.android.presentation.model
+package com.cankolay.kapacitor.android.presentation.theme
 
 enum class PaletteStyle {
     TonalSpot,

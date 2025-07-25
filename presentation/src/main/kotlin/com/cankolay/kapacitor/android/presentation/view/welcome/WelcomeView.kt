@@ -1,8 +1,9 @@
 package com.cankolay.kapacitor.android.presentation.view.welcome
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -20,15 +21,14 @@ fun WelcomeView() {
     val navController = LocalNavController.current
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Column(
+        Row(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(all = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom,
+                    .padding(all = 16.dp)
+                    .fillMaxSize(),
+            verticalAlignment = Alignment.Bottom,
         ) {
-            Button(onClick = {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = {
                 navController.navigate(route = Route.ServerDetails)
             }) {
                 Text(text = stringResource(id = R.string.welcome_lets_get_started))

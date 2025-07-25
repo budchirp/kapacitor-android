@@ -7,7 +7,6 @@ import android.view.Window
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.cankolay.kapacitor.android.presentation.model.PaletteStyle
 import com.kyant.m3color.hct.Hct
 import com.kyant.m3color.scheme.SchemeContent
 import com.kyant.m3color.scheme.SchemeExpressive

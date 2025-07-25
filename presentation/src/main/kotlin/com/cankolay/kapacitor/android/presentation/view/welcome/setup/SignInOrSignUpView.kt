@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -24,24 +25,26 @@ fun SignInOrSignUpView() {
         Row(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(all = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
-                alignment = Alignment.CenterHorizontally
-            ),
+                    .padding(all = 16.dp)
+                    .fillMaxSize(),
             verticalAlignment = Alignment.Bottom,
         ) {
-            Button(onClick = {
-                navController.navigate(route = Route.SignIn)
-            }) {
-                Text(text = stringResource(id = R.string.auth_sign_in))
-            }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+            ) {
 
-            Button(onClick = {
-                navController.navigate(route = Route.SignUp)
-            }) {
-                Text(text = stringResource(id = R.string.auth_sign_up))
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    navController.navigate(route = Route.SignIn)
+                }) {
+                    Text(text = stringResource(id = R.string.auth_sign_in))
+                }
+
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    navController.navigate(route = Route.SignUp)
+                }) {
+                    Text(text = stringResource(id = R.string.auth_sign_up))
+                }
             }
         }
     }
